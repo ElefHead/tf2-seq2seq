@@ -49,7 +49,7 @@ class NBRCell(keras.layers.GRUCell):
         ## z_t = self.recurrent_activation(tf.matmul(U_z, x_t) + tf.matmul(W_z, h_tm1))
         ## h_t = z_t * h_tm1 + (1 - z_t) * self.activation( tf.matmul(U_h, x_t) + r_t * tf.matmul(W_h, h_tm1) )
 
-        ## Neuromodulated Bistable RNN
+        ## Neuromodulated Bistable Recurrent Cell
         ## r_t = 1 + self.activation(tf.matmul(U_r, x_t) + tf.matmul(W_r, h_tm1))
         ## z_t = self.recurrent_activation(tf.matmul(U_z, x_t) + tf.matmul(W_z, h_tm1))
         ## h_t = (z_t * h_tm1) + (1 - z_t)*( self.activation( tf.matmul(U_h, x_t) + r_t * h_tm1 ))
