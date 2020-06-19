@@ -357,7 +357,8 @@ class NBR(keras.layers.RNN):
             'recurrent_dropout':
                 self.recurrent_dropout,
         }
-        config.update(_config_for_enable_caching_device(self.cell))
+        if self.cell._enable_caching_device != tf.executing_eagerly():
+            config.update({'enable_caching_device': rnn_cell._enable_caching_device})
         base_config = super(NBR, self).get_config()
         del base_config['cell']
         return dict(list(base_config.items()) + list(config.items()))
@@ -367,22 +368,3 @@ class NBR(keras.layers.RNN):
         if 'implementation' in config:
             config['implementation'] = 1
         return cls(**config)
-
-
-def _config_for_enable_caching_device(rnn_cell):
-    """Return the dict config for RNN cell wrt to enable_caching_device field.
-    Since enable_caching_device is a internal implementation detail for speed up
-    the RNN variable read when running on the multi remote worker setting, we
-    don't want this config to be serialized constantly in the JSON. We will only
-    serialize this field when a none default value is used to create the cell.
-    Args:
-    rnn_cell: the RNN cell for serialize.
-    Returns:
-    A dict which contains the JSON config for enable_caching_device value or
-    empty dict if the enable_caching_device value is same as the default value.
-    """
-    default_enable_caching_device = tf.executing_eagerly()
-    if rnn_cell._enable_caching_device != default_enable_caching_device:
-        return {'enable_caching_device': rnn_cell._enable_caching_device}
-    return {}
-
